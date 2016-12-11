@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Grasshopper.Kernel;
-using Rhino.Geometry;
 
 namespace ImageParameter
 {
@@ -31,7 +29,6 @@ namespace ImageParameter
         {
             pManager.AddIntegerParameter("widthInput", "Width", "imageWidth", GH_ParamAccess.item);
             pManager.AddIntegerParameter("heightInput", "Height", "imageHeight", GH_ParamAccess.item);
-
         }
 
         /// <summary>
@@ -51,32 +48,19 @@ namespace ImageParameter
         {
             //input variables
             int width = 100;
-            int height = 100;
-            
-            
+            int height = 100;          
 
             //get data
             DA.GetData(0, ref width);
             DA.GetData(1, ref height);
             
-
             Dictionary<string, int> imageP = new Dictionary<string, int>();
 
             imageP.Add("Width", width);
             imageP.Add("Height", height);
 
-
-
-
-            
-
-
             //set output
             DA.SetDataList(0, imageP);
-            
-
-
-
         }
 
         /// <summary>

@@ -2,9 +2,7 @@
 using System.Drawing;
 using System.Collections.Generic;
 using System.IO;
-
 using Grasshopper.Kernel;
-using Rhino.Geometry;
 
 namespace Aggregator
 {
@@ -36,7 +34,6 @@ namespace Aggregator
             pManager.AddTextParameter("outputsDataSet", "Outputs", "Outputs data", GH_ParamAccess.list);
             pManager.AddTextParameter("imageParams", "ImgParams", "ImageParams like height, width of output images", GH_ParamAccess.list);
             pManager.AddBooleanParameter("writeFile", "WriteFile", "Set to yes to run", GH_ParamAccess.item);
-            //pManager.AddTextParameter("imgName", "name", "imgName", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -72,8 +69,6 @@ namespace Aggregator
             DA.GetData(4, ref writeFile);
 
             //operations
-
-
             string csvPath = folder + "/data.csv";
             var rawData = inputs;
             int inDataLength = rawData.Count;
@@ -95,11 +90,9 @@ namespace Aggregator
 
                 if (i > 0) 
                 {
-
                     if (i < inDataLength)
                     {
                         keyReady += ",in:" + dataKey;
-                        
                     }
                     else
                     {
@@ -108,7 +101,6 @@ namespace Aggregator
 
                     valueReady = valueReady + "," + dataValue;
                     imgName = imgName + "_" + dataValue;
-
                 }
                 else
                 {
@@ -116,12 +108,10 @@ namespace Aggregator
                     keyReady = "in:" + dataKey;
                     valueReady += dataValue;
                     imgName = dataValue;
-                }
-                
+                } 
             }
 
-            
-            
+
             bool run = writeFile;
             string fileName = imgName;
             imgPath = folder+"/"+imgName + ".png";
@@ -129,18 +119,14 @@ namespace Aggregator
             string jsonFilePath = folder + "/" + fileName + ".json";
             string jsonFileName = fileName + ".json";
             string writeInData = "";
-            //int width = 500;
-            //int height = 500;
             List<int> cleanedImgParams = new List<int>();
             foreach (string item in imgParams) 
             {
                 string cleanItem = Convert.ToString(item).Replace("[", "").Replace("]", "").Replace(" ", "");
-                //string dataValue = cleanItem.Split(',')[1];
                 cleanedImgParams.Add(Convert.ToInt32(cleanItem.Split(',')[1]));
             }
 
             Size viewSize = new Size(cleanedImgParams[0], cleanedImgParams[1]);
-            //string imagePath = @"C:\Users\Mingbo\Documents\GitHub\Colibri.Grasshopper\src\MP_test\01.png";
             
             
             if (run)
@@ -159,7 +145,6 @@ namespace Aggregator
                 //save csv
                 writeInData = string.Format("{0},{1},{2}\n", valueReady, imgName, jsonFileName);
                 File.AppendAllText(csvPath, writeInData);
-
 
             }
             

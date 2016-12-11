@@ -1,16 +1,14 @@
 ﻿using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
-using Google.Apis.Drive.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using System;
-using System.Drawing;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using Grasshopper.Kernel;
-using Rhino.Geometry;
 using System.Windows.Forms;
+
 namespace Uploader
 {
     public class Uploader : GH_Component
@@ -70,50 +68,27 @@ namespace Uploader
             //input variables
             string folder = "";
             List<string> pathLinks = new List<string>();
-            //string filePath = @"C:\Users\Mingbo\Documents\GitHub\Colibri.Grasshopper\docs\GoogleDrive\test.png";
             bool writeFile = false;
             
             //get data
             DA.GetData(0, ref folder);
             DA.GetData(1, ref writeFile);
 
-            //operations
-            
-            //GetMimeType
-
-
-        bool run = writeFile;
+            bool run = writeFile;
 
             if (run)
             {
                 UserCredential credential;
-
-               // using (var stream =
-                //    new FileStream(@"C:\ladybug\client_secret.json", FileMode.Open, FileAccess.Read))
-               // {
-                 //   string credPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
-                    //string credPath = @"C:\ladybug\";
-                 //   credPath = Path.Combine(credPath, ".credentials/drive-dotnet-quickstart.json");
-
-                    credential = GoogleWebAuthorizationBroker.AuthorizeAsync(new ClientSecrets
-                    {
-                        ClientId = "1053044124868-avf2ae7kqj6aeed3k5p3lg95tom8oafm.apps.googleusercontent.com",
-                        ClientSecret = "p88yt1z0zohziAaSfEyOZk56"
-                    },
-                                                          new[] { DriveService.Scope.Drive,
-                                                                  DriveService.Scope.DriveFile },
-                                                          "user",
-                                                          CancellationToken.None,
-                                                          new FileDataStore("Drive.Auth.Store")).Result;
-
-                  //  credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                   //     GoogleClientSecrets.Load(stream).Secrets,
-                   //     Scopes,
-                   //     "user",
-                   //     CancellationToken.None,
-                   //     new FileDataStore(credPath, true)).Result;
-                   // Console.WriteLine("Credential file saved to: " + credPath);
-               // }
+                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(new ClientSecrets
+                {
+                    ClientId = "1053044124868-avf2ae7kqj6aeed3k5p3lg95tom8oafm.apps.googleusercontent.com",
+                    ClientSecret = "p88yt1z0zohziAaSfEyOZk56"
+                },
+                    new[] { DriveService.Scope.Drive,
+                            DriveService.Scope.DriveFile },
+                    "user",
+                    CancellationToken.None,
+                    new FileDataStore("Drive.Auth.Store")).Result;
 
                 // Create Drive API service.
                 var service = new DriveService(new BaseClientService.Initializer()
@@ -122,30 +97,18 @@ namespace Uploader
                     ApplicationName = ApplicationName,
                 });
 
-
-                
-
-                //FilesResource.ListRequest listRequest = service.Files.List();
                 var fileMetadata = new Google.Apis.Drive.v3.Data.File();
                 
                 fileMetadata.Name = "DesignExplorer_Colibri";
                 fileMetadata.MimeType = "application/vnd.google-apps.folder";
-                //fileMetadata.Parents = new List<string> { "0B8secD5h7wUFVW5GYmtZR3hqZkk" }; // play later
                 FilesResource.CreateRequest createRequest = service.Files.Create(fileMetadata);
-                ////var request = driveService.Files.Create(fileMetadata);
-                 createRequest.Fields = "id";
-                 var file = createRequest.Execute();
-                //Console.WriteLine("Folder ID: " + file.Id);
-                //Permission permission = new Permission ();
-                //permission.Role = "owner";
-                //permission.Type = "anyone";
-                //service.Permissions.Create(permission, file.Id).Execute();
-
-
+                createRequest.Fields = "id";
+                var file = createRequest.Execute();
 
                 string[] fileEntries = Directory.GetFiles(folder);
                 
-                foreach (string fileName in fileEntries) {
+                foreach (string fileName in fileEntries)
+                {
                     //dosomething;
                     Google.Apis.Drive.v3.Data.File body = new Google.Apis.Drive.v3.Data.File();
                     body.Name = System.IO.Path.GetFileName(fileName);
@@ -163,15 +126,10 @@ namespace Uploader
                         request.Upload();
                         var fileitem = request.ResponseBody;
                     }
-                    catch (Exception e)
-                    {
-                        //A =("An error occurred: " + e.Message);
-                    }
-                    //file.Id;
+                    catch { }
 
                 }
                 MessageBox.Show("http://tt-acm.github.io/DesignExplorer/?GFOLDER=" + file.Id, "test1", MessageBoxButtons.OK);
-
                 DA.SetData(0, "http://tt-acm.github.io/DesignExplorer/?GFOLDER="+ file.Id);
             }
         }

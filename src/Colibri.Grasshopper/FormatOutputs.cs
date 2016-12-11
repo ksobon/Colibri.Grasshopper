@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using Grasshopper.Kernel;
-using Rhino.Geometry;
 
 namespace Colibri.Grasshopper
 {
@@ -53,7 +51,6 @@ namespace Colibri.Grasshopper
             List<string> OutputValues = new List<string>();
 
             //catch inputs from Grasshopper
-
             DA.GetDataList(0, OutputNames);
             DA.GetDataList(1, OutputValues);
 

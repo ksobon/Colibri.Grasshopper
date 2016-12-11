@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using GH = Grasshopper;
 using Grasshopper.Kernel;
-using Rhino.Geometry;
 using System.Windows.Forms;
 using System.Linq;
 
@@ -65,9 +63,7 @@ namespace Colibri.Grasshopper
                 doc = GH.Instances.ActiveCanvas.Document; 
             }
 
-
             //catch grasshopper inputs
-
             //run or no?
             bool _fly = false;
             DA.GetData(2, ref _fly);
@@ -108,16 +104,12 @@ namespace Colibri.Grasshopper
                 catch (ArgumentException ex)
                 {
                     ex.ToString().Contains("key");
-                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error,  "Your sliders must have unique nicknames!  Set them all and try again.");
+                    AddRuntimeMessage(GH_RuntimeMessageLevel.Error, "Your sliders must have unique nicknames!  Set them all and try again.");
                     return;
                 }
-                catch (Exception ex)
-                {
-                    
-                }
+                catch { }
             }
             DA.SetDataList(0, inputs);
-
 
             //don't touch this stuff!  this is what makes the magic happen down below.
             if (!_fly)
@@ -132,14 +124,10 @@ namespace Colibri.Grasshopper
         }
 
 
-
         //methods below copied in from Ladybug Fly component
         private bool _run = false;
         private bool _running = false;
-        //private List<System.Object> _sliders;
-
         GH.Kernel.Special.GH_Group grp = new GH.Kernel.Special.GH_Group();
-
 
         private void OnSolutionEnd(object sender, GH_SolutionEventArgs e)
         {
@@ -215,7 +203,6 @@ namespace Colibri.Grasshopper
                 string pb = ".................................................."; //50 of "." - There should be a better way to create this in C# > 50 * "." does it in Python!
                 char[] pbChars = pb.ToCharArray();
 
-                int dummyCounter = 0;
                 foreach (GH.Kernel.Special.GH_NumberSlider slider in sliders)
                 {
                     totalLoops *= (slider.TickCount + 1);
